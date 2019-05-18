@@ -1,0 +1,73 @@
+---
+title: "EPH705 Homework 2"
+author: "Nina Dyatchenko"
+date: "January 31, 2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Agresti 2.12
+
+### a) Construct 2x2 table.
+
+```{r}
+HAdata <- matrix(c(198, 193, 19736, 19749),
+                  nrow = 2, ncol = 2, byrow = TRUE)
+
+dimnames (HAdata) <- list (Treatment = c("Aspirin", "Placebo"),
+                               outcome = c("Event", "No Event"))
+```
+
+### b) Odds ratio.
+```{r include=FALSE}
+library(vcdExtra)
+```
+```{r}
+OR <- oddsratio(HAdata, log = FALSE)
+OR
+```
+
+### c) 95% CI for odds ratio for women
+```{r}
+ciOR <- confint(OR)
+ciOR
+```
+
+### Agresti 2.13
+```{r}
+Afterlife <- matrix(c(509, 116, 398, 104),
+                  nrow = 2, ncol = 2, byrow = TRUE)
+
+dimnames (Afterlife) <- list (Sex = c("Female", "Male"),
+                            Belief = c("Yes", "No"))
+```
+
+### a) 90% CI for difference in proportions
+```{r}
+p1 <- Afterlife[1]/((Afterlife[1]+Afterlife[3]))
+p1
+p2 <- Afterlife[2]/((Afterlife[2]+Afterlife[4]))
+p2
+
+diff_prop <- p1 - p2
+diff_prop
+n1 <- Afterlife[1] +Afterlife[3]
+n2<- Afterlife[2] +Afterlife[4]
+SE <- sqrt(p1*(1-p1)/n1 + p2*(1-p2)/n2)
+SE
+Lci <- diff_prop - (1.645 * SE)
+Uci <- diff_prop + (1.645 * SE)
+Lci
+Uci
+```
+
+### b) 90% CI for Odds ratio
+```{r}
+OR_2 <-oddsratio(Afterlife, log = FALSE) 
+OR_2
+ciOR_2 <- confint(OR_2, level = 0.9)
+ciOR_2
+```

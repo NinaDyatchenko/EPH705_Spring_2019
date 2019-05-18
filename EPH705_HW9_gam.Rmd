@@ -1,0 +1,55 @@
+---
+title: "EPH705 Homework 9. Generalized Additive Models"
+author: "Nina Dyatchenko"
+date: "April 4, 2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1) Fit model Volume ~ Height + Girth with Gaussian link function:
+
+```{r}
+library(mgcv)
+log.volume <- log(trees$Volume)
+log.volume
+
+model_vol_grth <- gam(log.volume ~ s(Height) + s(Girth), 
+                      data = trees,
+                      family = gaussian(link = identity))
+model_vol_grth
+```
+
+2) Fit GAM using REML with penalized cubic spline basis function:
+
+```{r}
+model_penal <- gam(log.volume ~ s(Height, bs = "cr") + s(Girth, bs = "cr"),
+                   data = trees,
+                   family = gaussian(link = identity),
+                   method = "REML")
+model_penal
+```
+
+3) Plot fitted functions s(Height) vs. Height and s(Girth) vs. Girth:
+
+```{r}
+plot(model_vol_grth,
+     residuals = TRUE,
+     pch = 19) ## calls plot.gam
+
+plot(model_penal,
+     residuals = TRUE,
+     pch = 19)
+```
+
+4) Predict Volume of a tree when Heoght = 70 and Girth = 10 
+for model obtained by REML:
+
+```{r}
+vol_predict <- data.frame(Height = 70,
+                      Girth= 10)
+predict(model_penal,
+        newdata = vol_predict)
+```
